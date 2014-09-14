@@ -52,6 +52,8 @@ describe "Authentication" do
   		describe "followed by signout" do
   			before { click_link "Sign out" }
   			it { should have_link('Sign in') }
+        it { should_not have_link('Profile') }
+        it { should_not have_link('Settings') }
   		end
   	end
   end
@@ -76,6 +78,20 @@ describe "Authentication" do
   				end
   			end
   		end
+
+      describe "in the Microposts controller" do
+
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
+      
   		describe "in the Users controller" do
 
   			describe "visiting the edit page" do
